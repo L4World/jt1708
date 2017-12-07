@@ -9,7 +9,6 @@ public class IndexController {
 
     @RequestMapping("/page/{pageName}")
     public String goHome(@PathVariable String pageName) {
-        System.out.println("test");
         return pageName;
     }
 }

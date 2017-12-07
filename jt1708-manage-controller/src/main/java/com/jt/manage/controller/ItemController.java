@@ -3,8 +3,10 @@ package com.jt.manage.controller;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jt.common.vo.EasyUIResult;
+import com.jt.common.vo.SysResult;
 import com.jt.manage.pojo.Item;
 import com.jt.manage.service.ItemService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,21 +14,66 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
+
 @Controller
 @RequestMapping("/item/")
 public class ItemController {
     @Autowired
     private ItemService itemService;
+    private static final Logger log = Logger.getLogger(ItemController.class);
 
     @RequestMapping("/query")
     @ResponseBody
     //page 代表当前页数 , rows 代表每页数量 , EasyUI 封装了参数的过程
-    public EasyUIResult queryItemList(Integer page,Integer rows) {
-        PageHelper.startPage(page,rows);
+    public EasyUIResult queryItemList(Integer page, Integer rows) {
+
+        PageHelper.startPage(page, rows);
         //只开启当前 startPage 方法下的第一条查询语句的拦截
         List<Item> itemList = itemService.queryItemList();
         //用 pageInfo 来封装结果 , 记录总数和当前页的记录商品条数
         PageInfo<Item> pageInfo = new PageInfo<Item>(itemList);
-        return new EasyUIResult(pageInfo.getTotal(),pageInfo.getList());
+        return new EasyUIResult(pageInfo.getTotal(), pageInfo.getList());
     }
+
+    @RequestMapping("/save")
+    @ResponseBody
+    public SysResult saveItem(Item item) {
+        try {
+            itemService.saveItem(item);
+            return SysResult.oK();
+        } catch (Exception e) {
+            //设置错误返回消息
+            String message = e.getMessage();
+            log.error(message);
+            return SysResult.build(201, message);
+        }
+    }
+
+    @RequestMapping("/update")
+    @ResponseBody
+    public SysResult updateItem(Item item) {
+        try {
+            itemService.updateItem(item);
+            return SysResult.oK();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return SysResult.build(201, e.getMessage());
+        }
+    }
+
+    @RequestMapping("/delete")
+    @ResponseBody
+    public SysResult deleteItems(Long[] ids) {
+        try {
+            itemService.deleteItems(ids);
+            return SysResult.oK();
+        } catch (Exception e) {
+            String msg = e.getMessage();
+            log.error(msg);
+            return SysResult.build(201,msg);
+        }
+
+    }
+
+
 }
