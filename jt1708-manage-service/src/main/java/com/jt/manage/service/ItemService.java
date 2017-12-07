@@ -3,7 +3,6 @@ package com.jt.manage.service;
 import com.jt.common.service.BaseService;
 import com.jt.manage.mapper.ItemMapper;
 import com.jt.manage.pojo.Item;
-import javafx.scene.media.VideoTrack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

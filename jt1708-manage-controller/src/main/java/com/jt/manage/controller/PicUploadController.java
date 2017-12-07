@@ -18,6 +18,7 @@ import java.util.Date;
 @Controller
 public class PicUploadController {
 
+    //用于记录日志
     private static final Logger log = Logger.getLogger(PicUploadController.class);
 
     @RequestMapping("pic/upload")
@@ -36,8 +37,8 @@ public class PicUploadController {
          * 7 生成1个picUpload的对象来封装数据
          */
         PicUploadResult result = new PicUploadResult();
-        String oldFileName = uploadFile.getOriginalFilename();
-        String extFileName = oldFileName.substring(oldFileName.lastIndexOf("."));
+        String oldFileName = uploadFile.getOriginalFilename();  //原文件名
+        String extFileName = oldFileName.substring(oldFileName.lastIndexOf("."));   //文件扩展名
         //文件后缀判断 , 正则来判断
         if (!extFileName.matches("^.*(jpg|png|gif|jpeg)$")) {
             result.setError(1);
@@ -58,7 +59,7 @@ public class PicUploadController {
             if (!_dir.exists()) {   //不存在路径直接创建
                 _dir.mkdirs();  //创建多级目录
             }
-            //生成根据计算方法完成文件名称的重命名
+            //生成根据计算方法完成文件名称的重命名 , 防止文件重名问题
             String fileName = System.currentTimeMillis() + "" + RandomUtils.nextInt(100, 999) + extFileName;
             //保存虚拟路径
             result.setUrl(urlPrefix + fileName);
