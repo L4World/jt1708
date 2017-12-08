@@ -1,8 +1,10 @@
 package com.jt.manage.controller;
 
+import com.jt.common.service.PropertieService;
 import com.jt.common.vo.PicUploadResult;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +19,8 @@ import java.util.Date;
 
 @Controller
 public class PicUploadController {
+    @Autowired
+    private PropertieService propertieService;
 
     //用于记录日志
     private static final Logger log = Logger.getLogger(PicUploadController.class);
@@ -51,9 +55,12 @@ public class PicUploadController {
             result.setWidth(bufferedImage.getWidth() + "");
             //生成有格式的路径
             String dir = "/images/" + new SimpleDateFormat("yyyy/MM/dd").format(new Date()) + "/";
-            String urlPrefix = "http://image.jt.com" + dir;//相对路径 , 属性注入的解耦操作(后期再修改)
+//            String urlPrefix = "http://image.jt.com" + dir;//相对路径 , 属性注入的解耦操作(后期再修改)
+            String urlPrefix = propertieService.IMAGE_BASE_URL + dir;   //实现属性解耦
+
             //绝对路径"c:/jt-upload/images/"+dir
-            String path = "c:/jt-upload/images/" + dir;
+//            String path = "c:/jt-upload/" + dir;
+            String path = propertieService.REPOSITORY_PATH + dir;   //实现属性解耦
             File _dir = new File(path);
             //判断是否存在目录
             if (!_dir.exists()) {   //不存在路径直接创建

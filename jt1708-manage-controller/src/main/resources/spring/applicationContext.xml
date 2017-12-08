@@ -11,9 +11,16 @@
 	<bean
 		class="com.jt.common.spring.exetend.ExtendedPropertyPlaceholderConfigurer">
 		<!-- 允许JVM参数覆盖 -->
+		<!-- 属性注入插件默认加载的bean读取properties文件内容
+		 	如果在java代码中再次调用覆盖了当前加载的key 和 value
+		 	预习覆盖
+		 -->
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
+
 		<!-- 忽略没有找到的资源文件 -->
+        <!-- 对于location里的配置文件,加载不到不会报错 -->
 		<property name="ignoreResourceNotFound" value="true" />
+
 		<!-- 配置资源文件 -->
 		<property name="locations">
 			<list>

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Table(name = "tb_item")
 public class Item extends BasePojo{
     @Id
