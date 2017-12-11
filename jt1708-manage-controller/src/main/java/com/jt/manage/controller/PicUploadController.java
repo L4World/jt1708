@@ -29,7 +29,7 @@ public class PicUploadController {
     @ResponseBody
     public PicUploadResult picUpload(MultipartFile uploadFile) {
         /**
-         * 文件上次的步骤
+         * 文件上传的步骤
          * 1 拿到这个文件名,拿到扩展名,判断是否为合法的图片文件后缀
          * .jpg .png .gif .jpeg
          * 2 判断是否为木马

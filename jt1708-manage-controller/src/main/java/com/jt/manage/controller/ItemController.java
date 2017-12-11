@@ -5,10 +5,12 @@ import com.github.pagehelper.PageInfo;
 import com.jt.common.vo.EasyUIResult;
 import com.jt.common.vo.SysResult;
 import com.jt.manage.pojo.Item;
+import com.jt.manage.pojo.ItemDesc;
 import com.jt.manage.service.ItemService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -24,7 +26,7 @@ public class ItemController {
 
     @RequestMapping("/query")
     @ResponseBody
-    //page 代表当前页数 , rows 代表每页数量 , EasyUI 封装了参数的过程
+//    page 代表当前页数 , rows 代表每页数量 , EasyUI 封装了参数的过程
     public EasyUIResult queryItemList(Integer page, Integer rows) {
         PageHelper.startPage(page, rows);
 
@@ -39,9 +41,9 @@ public class ItemController {
 
     @RequestMapping("/save")
     @ResponseBody
-    public SysResult saveItem(Item item) {
+    public SysResult saveItem(Item item,String desc) {
         try {
-            itemService.saveItem(item);
+            itemService.saveItem(item,desc);
             return SysResult.oK();
         } catch (Exception e) {
             //设置错误返回消息
@@ -53,9 +55,9 @@ public class ItemController {
 
     @RequestMapping("/update")
     @ResponseBody
-    public SysResult updateItem(Item item) {
+    public SysResult updateItem(Item item,String desc) {
         try {
-            itemService.updateItem(item);
+            itemService.updateItem(item ,desc);
             return SysResult.oK();
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -74,7 +76,17 @@ public class ItemController {
             log.error(msg);
             return SysResult.build(201,msg);
         }
+    }
 
+    /**
+     * 获取商品详情
+     * @return
+     */
+    @RequestMapping("query/item/desc/{id}")
+    @ResponseBody
+    public SysResult getItemDesc(@PathVariable Long id) {
+        ItemDesc itemDesc = itemService.getItemDesc(id);
+        return SysResult.oK(itemDesc);
     }
 
 
