@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jt.manage.pojo.ItemCat;
 import com.jt.manage.service.ItemCatService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -27,7 +28,12 @@ public class ItemCatController {
     @RequestMapping("/list")
     @ResponseBody
     public List<ItemCat> queryItemCatList(@RequestParam(defaultValue = "0")Integer id) {
-        List<ItemCat> itemCatList = itemCatService.queryItemCatList(id);
+        List<ItemCat> itemCatList = null;
+        try {
+            itemCatList = itemCatService.queryItemCatList(id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return itemCatList;
     }
 }

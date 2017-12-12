@@ -15,6 +15,8 @@ public class ItemCat extends BasePojo{
     private Integer status;
     private Integer sortOrder;
     private boolean isParent;
+    private String state;
+    private String text;
 
     public boolean isParent() {
         return isParent;
