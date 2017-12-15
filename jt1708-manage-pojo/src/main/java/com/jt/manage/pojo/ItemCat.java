@@ -1,10 +1,12 @@
 package com.jt.manage.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jt.common.po.BasePojo;
 
 import javax.persistence.*;
 
 @Table(name="tb_item_cat")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemCat extends BasePojo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,8 +17,6 @@ public class ItemCat extends BasePojo{
     private Integer status;
     private Integer sortOrder;
     private boolean isParent;
-    private String state;
-    private String text;
 
     public boolean isParent() {
         return isParent;

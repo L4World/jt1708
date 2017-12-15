@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jt.manage.mapper.ItemCatMapper;
 import org.springframework.util.StringUtils;
+import redis.clients.jedis.JedisCluster;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,8 +20,11 @@ public class ItemCatService extends BaseService<ItemCat> {
 
     @Autowired
     private ItemCatMapper itemCatMapper;
-    @Autowired
+    @Autowired(required = false)
     private RedisService redisService;
+    @Autowired
+    private JedisCluster jedisCluster;
+
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public List<ItemCat> queryItemCatList(Integer parentId) throws IOException {

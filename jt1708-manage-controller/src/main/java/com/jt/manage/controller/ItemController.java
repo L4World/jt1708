@@ -26,20 +26,20 @@ public class ItemController {
     private ItemService itemService;
     private static final Logger log = Logger.getLogger(ItemController.class);
 
-//    @RequestMapping("/query")
-//    @ResponseBody
-////    page 代表当前页数 , rows 代表每页数量 , EasyUI 封装了参数的过程
-//    public EasyUIResult queryItemList(Integer page, Integer rows) {
-//        PageHelper.startPage(page, rows);
-//
-//        //只开启当前 startPage 方法下的第一条查询语句的拦截
-//        List<Item> itemList = itemService.queryItemList();
-//
-//        //用 pageInfo 来封装结果 , 记录总数和当前页的记录商品条数
-//        PageInfo<Item> pageInfo = new PageInfo<Item>(itemList);
-//
-//        return new EasyUIResult(pageInfo.getTotal(), pageInfo.getList());
-//    }
+    @RequestMapping("/query")
+    @ResponseBody
+//    page 代表当前页数 , rows 代表每页数量 , EasyUI 封装了参数的过程
+    public EasyUIResult queryItemList(Integer page, Integer rows) {
+        PageHelper.startPage(page, rows);
+
+        //只开启当前 startPage 方法下的第一条查询语句的拦截
+        List<Item> itemList = itemService.queryItemList();
+
+        //用 pageInfo 来封装结果 , 记录总数和当前页的记录商品条数
+        PageInfo<Item> pageInfo = new PageInfo<Item>(itemList);
+
+        return new EasyUIResult(pageInfo.getTotal(), pageInfo.getList());
+    }
 
     @RequestMapping("/save")
     @ResponseBody
