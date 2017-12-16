@@ -211,6 +211,12 @@
             <version>${jedis.version}</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>org.tinygroup</groupId>-->
+            <!--<artifactId>org.tinygroup.jedis</artifactId>-->
+            <!--<version>3.4.7</version>-->
+        <!--</dependency>-->
+
 
         <!-- 字符加密、解密 -->
         <dependency>
