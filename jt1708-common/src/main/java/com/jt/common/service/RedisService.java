@@ -1,8 +1,10 @@
 package com.jt.common.service;
 
+import com.jt.common.util.RedisCluster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
@@ -12,21 +14,34 @@ public class RedisService {
 	//有的工程需要，有的工程不需要。设置required=false，有就注入，没有就不注入。
     @Autowired(required = false)
     private ShardedJedisPool shardedJedisPool;
+    @Autowired
+    private RedisCluster redisCluster;
 
-    private <T> T execute(Function<ShardedJedis, T> function) {
-        ShardedJedis shardedJedis = null;
+    private <T> T execute(Function<JedisCluster, T> function) {
+        JedisCluster cluster = null;
         try {
-            // 从连接池中获取到jedis分片对象
-            shardedJedis = shardedJedisPool.getResource();
-            return function.execute(shardedJedis);
+            cluster = redisCluster.getObject();
+            return function.execute(cluster);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (null != shardedJedis) {
-                // 关闭，检测连接是否有效，有效则放回到连接池中，无效则重置状态
-                shardedJedis.close();
-            }
         }
+//        finally {
+//            if (null != cluster) {
+//                cluster.close();
+//            }
+//        }
+//        try {
+//            // 从连接池中获取到jedis分片对象
+//            shardedJedis = shardedJedisPool.getResource();
+//            return function.execute(shardedJedis);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (null != shardedJedis) {
+//                // 关闭，检测连接是否有效，有效则放回到连接池中，无效则重置状态
+//                shardedJedis.close();
+//            }
+//        }
         return null;
     }
 
@@ -38,9 +53,9 @@ public class RedisService {
      * @return
      */
     public String set(final String key, final String value) {
-        return this.execute(new Function<ShardedJedis, String>() {
+        return this.execute(new Function<JedisCluster, String>() {
             @Override
-            public String execute(ShardedJedis shardedJedis) {
+            public String execute(JedisCluster shardedJedis) {
                 return shardedJedis.set(key, value);
             }
 
@@ -56,9 +71,9 @@ public class RedisService {
      * @return
      */
     public String set(final String key, final String value, final Integer seconds) {
-        return this.execute(new Function<ShardedJedis, String>() {
+        return this.execute(new Function<JedisCluster, String>() {
             @Override
-            public String execute(ShardedJedis shardedJedis) {
+            public String execute(JedisCluster shardedJedis) {
                 String result = shardedJedis.set(key, value);
                 shardedJedis.expire(key, seconds);//设置生存时间
                 return result;
@@ -74,9 +89,9 @@ public class RedisService {
      * @return
      */
     public String get(final String key) {
-        return this.execute(new Function<ShardedJedis, String>() {
+        return this.execute(new Function<JedisCluster, String>() {
             @Override
-            public String execute(ShardedJedis shardedJedis) {
+            public String execute(JedisCluster shardedJedis) {
                 return shardedJedis.get(key);
             }
 
@@ -91,9 +106,9 @@ public class RedisService {
      * @return
      */
     public Long expire(final String key, final Integer seconds) {
-        return this.execute(new Function<ShardedJedis, Long>() {
+        return this.execute(new Function<JedisCluster, Long>() {
             @Override
-            public Long execute(ShardedJedis shardedJedis) {
+            public Long execute(JedisCluster shardedJedis) {
                 return shardedJedis.expire(key, seconds);
             }
 
@@ -107,9 +122,9 @@ public class RedisService {
      * @return
      */
     public Long del(final String key) {
-        return this.execute(new Function<ShardedJedis, Long>() {
+        return this.execute(new Function<JedisCluster, Long>() {
             @Override
-            public Long execute(ShardedJedis shardedJedis) {
+            public Long execute(JedisCluster shardedJedis) {
                 return shardedJedis.del(key);
             }
         });
