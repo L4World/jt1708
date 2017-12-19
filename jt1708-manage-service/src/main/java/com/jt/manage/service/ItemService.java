@@ -62,7 +62,6 @@ public class ItemService extends BaseService<Item> {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 
     public void updateItem(Item item, String desc) {
@@ -91,7 +90,6 @@ public class ItemService extends BaseService<Item> {
         String jsonData = MAPPER.writeValueAsString(entity);
         redisService.set(KEYNAME, jsonData, 60 * 60 * 24 * 10);
     }
-
 
     public void deleteItems(Long[] ids) {
         itemDescMapper.deleteByIDS(ids);
