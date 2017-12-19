@@ -42,7 +42,7 @@
 
 	<servlet-mapping>
 		<servlet-name>springmvc-web</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
 	<!-- 防止springMVC框架返回json时和html冲突报 406 错误 -->
 	<servlet-mapping>
