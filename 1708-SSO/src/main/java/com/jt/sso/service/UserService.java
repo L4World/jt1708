@@ -59,7 +59,7 @@ public class UserService extends BaseService<User> {
         //byWhere 会对不是null的数据进行查询条件的拼接
         User _user = new User();
         _user.setUsername(username);
-        //安装用户名查询
+        //按照用户名查询
         User user = super.queryByWhere(_user);
         if (null != user) {
             //密码对比

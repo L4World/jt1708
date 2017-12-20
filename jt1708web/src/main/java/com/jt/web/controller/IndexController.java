@@ -11,4 +11,9 @@ public class IndexController {
         //转向前台首页
         return "index";
     }
+
+    @RequestMapping("/")
+    public String index() {
+        return "index";
+    }
 }

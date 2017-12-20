@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -44,6 +45,8 @@ public class UserController {
     }
 
     //用户登录
+    @RequestMapping("login")
+    @ResponseBody
     public SysResult login(String u,String p) {
         //获取业务层返回结果
         String ticket = userService.login(u, p);

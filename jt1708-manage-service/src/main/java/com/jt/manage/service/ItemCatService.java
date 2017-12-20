@@ -22,8 +22,6 @@ public class ItemCatService extends BaseService<ItemCat> {
     private ItemCatMapper itemCatMapper;
     @Autowired(required = false)
     private RedisService redisService;
-    @Autowired
-    private JedisCluster jedisCluster;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 

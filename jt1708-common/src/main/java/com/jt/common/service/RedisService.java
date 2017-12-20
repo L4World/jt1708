@@ -12,8 +12,8 @@ import redis.clients.jedis.ShardedJedisPool;
 public class RedisService {
 
 	//有的工程需要，有的工程不需要。设置required=false，有就注入，没有就不注入。
-    @Autowired(required = false)
-    private ShardedJedisPool shardedJedisPool;
+//    @Autowired(required = false)
+//    private ShardedJedisPool shardedJedisPool;
     @Autowired
     private RedisCluster redisCluster;
 
