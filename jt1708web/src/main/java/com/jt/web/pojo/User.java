@@ -1,5 +1,6 @@
 package com.jt.web.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.jt.common.po.BasePojo;
 
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "tb_user")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends BasePojo{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

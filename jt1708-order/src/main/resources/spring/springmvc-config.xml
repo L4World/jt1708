@@ -8,27 +8,27 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<!-- MVC注解驱动 -->
-	<mvc:annotation-driven/>
+	<!--<mvc:annotation-driven/>-->
+
+	<!-- 采用自定义方案 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<!-- 定义默认转化器 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg index="0" value="UTF-8"/>
+			</bean>
+			<!-- 添加为 jsonp 准备的 converter -->
+			<bean class="com.jt.common.spring.exetend.jackson.CallbackMappingJackson2HttpMessageConverter">
+				<property name="callbackName" value="callback"/>
+			</bean>
+		</mvc:message-converters>
+
+	</mvc:annotation-driven>
 
 	<!-- 配置扫描器，使得@Controller注解生效 -->
-	<context:component-scan base-package="com.jt.web.controller" />
-
-	<!-- 定义视图解析器 -->
-	<!-- prefix="/WEB-INF/jsp/", suffix=".jsp", viewname="test" -> "/WEB-INF/jsp/test.jsp" -->
-	<bean
-		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<!-- 前缀 -->
-		<property name="prefix" value="/WEB-INF/views/" />
-		<!-- 后缀 -->
-		<property name="suffix" value=".jsp" />
-	</bean>
+	<context:component-scan base-package="com.jt.order.controller" />
 
 	<!-- 处理静态资源被“/”所拦截的问题 -->
-	<mvc:default-servlet-handler/>
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/cart/**"/> <!-- 拦截访问controller的地址规则,两个*表示连接多级-->
-			<bean class="com.jt.web.interceptor.CartInterceptor"/>
-		</mvc:interceptor>
-	</mvc:interceptors>
+	<mvc:default-servlet-handler />
+
 </beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.order.mapper.OrderMapper">
+    <insert id="orderCreate" parameterType="Order">
+        INSERT INTO tb_order (order_id,payment,payment_type,post_fee,status,
+        payment_time,consign_time,end_time,close_time,shipping_name,shipping_code,
+        user_id,buyer_message,buyer_nick,buyer_rate)
+        VALUES
+        (#{orderId},#{payment}#,#{paymentType},#{postFee},#{status},
+        #{paymentTime},#{consignTime},#{endTime},#{closeTime},#{shippingName},#{shippingCode},
+        #{userId},#{buyerMessage},#{buyerNick},#{buyerRate});
+        INSERT INTO tb_order_item (item_id,order_id,num,title,price,total_fee,pic_path)
+        VALUES
+        <foreach collection="orderItems" item="item" separator=",">
+            (#{item.itemId},#{item.orderId},#{item.num},#{item.title},#{item.price},#{item.totalFee},#{item.picPath})
+        </foreach>
+        ;
+        INSERT INTO tb_order_shipping (order_id,receiver_name,receiver_phone,receiver_mobile,receiver_state,receiver_city,receiver_district,receiver_address,receiver_zip,created,updated)
+        VALUES
+        (#{orderShipping.orderId},#{orderShipping.receiverName},#{orderShipping.receiverPhone},
+        #{orderShipping.receiverMobile},#{orderShipping.receiverState},#{orderShipping.receiverCity}
+        ,#{orderShipping.receiverDistrict},#{orderShipping.receiverAddress},#{orderShipping.receiverZip},
+        #{orderShipping.created},#{orderShipping.updated})
+    </insert>
+</mapper>

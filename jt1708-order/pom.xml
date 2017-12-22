@@ -7,9 +7,9 @@
         <relativePath>../jt1708-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>1708-SSO</artifactId>
+    <artifactId>jt1708-order</artifactId>
     <packaging>war</packaging>
-    <name>1708-SSO Maven Webapp</name>
+    <name>jt1708-order Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
@@ -19,7 +19,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>1708-SSO</finalName>
+        <finalName>jt1708-order</finalName>
         <plugins>
             <!-- tomcat 服务器插件 -->
             <plugin>
@@ -27,7 +27,7 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <port>8102</port>
+                    <port>8104</port>
                     <path>/</path>
                 </configuration>
             </plugin>

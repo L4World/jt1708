@@ -6,4 +6,8 @@
     <select id="queryMyCart" parameterType="long" resultType="Cart">
         SELECT * FROM tb_cart where user_id=#{userId} ORDER BY updated DESC
     </select>
+
+    <update id="updateNum" parameterType="Cart">
+        UPDATE tb_cart SET num=#{num} where user_id=${userId} and item_id=${itemId}
+    </update>
 </mapper>

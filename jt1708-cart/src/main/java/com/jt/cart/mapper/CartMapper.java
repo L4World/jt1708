@@ -5,6 +5,8 @@ import com.jt.common.mapper.SysMapper;
 
 import java.util.List;
 
-public interface CartMapper extends SysMapper<CartMapper>{
+public interface CartMapper extends SysMapper<Cart>{
     public List<Cart> queryMyCart(Long userId);
+
+    public void updateNum(Cart cart);
 }

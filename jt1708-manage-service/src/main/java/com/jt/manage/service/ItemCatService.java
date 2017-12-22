@@ -22,6 +22,8 @@ public class ItemCatService extends BaseService<ItemCat> {
     private ItemCatMapper itemCatMapper;
     @Autowired(required = false)
     private RedisService redisService;
+    public int i = 5;
+    public int b=10;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -58,7 +60,4 @@ public class ItemCatService extends BaseService<ItemCat> {
 //        List<ItemCat> itemCatList = itemCatMapper.queryItemCatList(parentId);
         return itemCatList;
     }
-
-
-
 }
