@@ -30,5 +30,9 @@
 			<mvc:mapping path="/cart/**"/> <!-- 拦截访问controller的地址规则,两个*表示连接多级-->
 			<bean class="com.jt.web.interceptor.CartInterceptor"/>
 		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/order/**"/> <!-- 拦截访问controller的地址规则,两个*表示连接多级-->
+			<bean class="com.jt.web.interceptor.CartInterceptor"/>
+		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

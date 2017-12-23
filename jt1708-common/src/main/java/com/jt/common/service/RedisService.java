@@ -2,6 +2,7 @@ package com.jt.common.service;
 
 import com.jt.common.util.RedisCluster;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Service;
 
 import redis.clients.jedis.JedisCluster;
@@ -14,7 +15,7 @@ public class RedisService {
 	//有的工程需要，有的工程不需要。设置required=false，有就注入，没有就不注入。
 //    @Autowired(required = false)
 //    private ShardedJedisPool shardedJedisPool;
-    @Autowired
+    @Autowired(required = false)
     private RedisCluster redisCluster;
 
     private <T> T execute(Function<JedisCluster, T> function) {

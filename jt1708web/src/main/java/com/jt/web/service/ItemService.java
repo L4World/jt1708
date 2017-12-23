@@ -3,11 +3,13 @@ package com.jt.web.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jt.common.service.HttpClientService;
 import com.jt.common.service.RedisService;
+import com.jt.common.util.RedisUtils;
 import com.jt.web.pojo.Item;
 import com.jt.web.pojo.ItemDesc;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 @Service
 public class ItemService {
@@ -16,16 +18,16 @@ public class ItemService {
     private HttpClientService httpClientService;
     private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
-    private RedisService redisService;
+    private JedisCluster jedisCluster;
 
     public Item getItem(Long itemId) {
         //模拟发起http请求,需要一个url
         String url = "http://manage.jt.com/items/" + itemId;
         //引入redis的缓存,如果有数据就直接返回,没有数据继续执行业务
         //key值的计算,和后台需要一致
-        String ITEM_KEY = "ITEM_" + itemId;
+        String ITEM_KEY = RedisUtils.ITEM_KEY + itemId;
         //习惯上的一个过期时间,10天,60*60*24*10
-        String jsonData = redisService.get(ITEM_KEY);
+        String jsonData = jedisCluster.get(ITEM_KEY);
         try {
             if (StringUtils.isNotEmpty(jsonData)) {
                 Item item = MAPPER.readValue(jsonData, Item.class);
@@ -33,7 +35,7 @@ public class ItemService {
             }else{
                 jsonData = httpClientService.doGet(url, "utf-8");
                 Item item = MAPPER.readValue(jsonData, Item.class);
-                redisService.set(ITEM_KEY, jsonData, 60 * 60 * 24 * 10);
+                jedisCluster.set(ITEM_KEY, jsonData);
                 return item;
             }
         } catch (Exception e) {

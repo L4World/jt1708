@@ -21,7 +21,7 @@ public class ItemCatService extends BaseService<ItemCat> {
     @Autowired
     private ItemCatMapper itemCatMapper;
     @Autowired(required = false)
-    private RedisService redisService;
+    private JedisCluster jedisCluster;
     public int i = 5;
     public int b=10;
 
@@ -31,7 +31,7 @@ public class ItemCatService extends BaseService<ItemCat> {
         //定义key值
         String ITEM_CAT_KEY = "ITEM_CAT_"+parentId;
         //1.读取缓存调用get方法拿到字符串 , 需要json格式 , json格式可以转成java对象
-        String jsonData = redisService.get(ITEM_CAT_KEY);
+        String jsonData = jedisCluster.get(ITEM_CAT_KEY);
         //判断是否有值
         List<ItemCat> itemCatList = null;
         //判断缓存值json串是否为空
@@ -51,7 +51,7 @@ public class ItemCatService extends BaseService<ItemCat> {
                 String json = null;
                 //对象边json , 对象存入缓存
                 json = MAPPER.writeValueAsString(itemCatList);
-                redisService.set(ITEM_CAT_KEY, json);
+                jedisCluster.set(ITEM_CAT_KEY, json);
             } catch (JsonProcessingException e) {
                 //写日志
                 e.printStackTrace();

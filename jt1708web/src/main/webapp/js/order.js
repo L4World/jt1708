@@ -5765,6 +5765,7 @@ function cancelAllUsedGiftCards(giftCardType) {
 	 */
 	function submit_Order() {
 		$("#submit_message").hide();
+		alert(111);
 		jQuery.ajax( {
 			type : "POST",
 			dataType : "json",

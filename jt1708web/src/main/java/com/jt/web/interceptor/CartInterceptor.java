@@ -43,7 +43,7 @@ public class CartInterceptor implements HandlerInterceptor {
             String url = "http://sso.jt.com/user/query/" + ticket;
             String jsonData = httpClientService.doGet(url, "utf-8");
             JsonNode userNode = MAPPER.readTree(jsonData).get("data");
-            User curUser = MAPPER.readValue(userNode.traverse(), User.class);
+            User curUser = MAPPER.readValue(userNode.asText(), User.class);
             UserThreadLocal.set(curUser);
             return true;
         }

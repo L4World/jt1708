@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.jt.common.service.BaseService;
 import com.jt.common.service.RedisService;
+import com.jt.common.util.RedisUtils;
 import com.jt.common.vo.EasyUIResult;
 import com.jt.manage.mapper.ItemDescMapper;
 import com.jt.manage.mapper.ItemMapper;
@@ -13,6 +14,7 @@ import com.jt.manage.pojo.Item;
 import com.jt.manage.pojo.ItemDesc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import java.util.Date;
 import java.util.List;
@@ -24,7 +26,7 @@ public class ItemService extends BaseService<Item> {
     @Autowired
     private ItemDescMapper itemDescMapper;
     @Autowired
-    private RedisService redisService;
+    private JedisCluster jedisCluster;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public EasyUIResult queryItemList(Integer page,Integer rows) {
@@ -54,11 +56,11 @@ public class ItemService extends BaseService<Item> {
         //把后台新增页面传递过来的数据封装成json字符串
         //设置key值,将json存入redis
         //TODO--作业:待完成商品新增缓存
-        String ITEM_KEY = "ITEM_" + item.getId();
-        String ITEM_DESC_KEY = "ITEM_DESC_" + item.getId();
+        String ITEM_KEY = RedisUtils.ITEM_KEY + item.getId();
+        String ITEM_DESC_KEY = RedisUtils.ITEM_DESC_KEY + item.getId();
         try {
-            saveToRedis(item, ITEM_KEY);
-            saveToRedis(itemDesc, ITEM_DESC_KEY);
+            RedisUtils.saveToRedis(jedisCluster,item,ITEM_KEY);
+            RedisUtils.saveToRedis(jedisCluster,itemDesc,ITEM_DESC_KEY);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -74,21 +76,16 @@ public class ItemService extends BaseService<Item> {
         itemDesc.setUpdated(item.getUpdated());
         itemDescMapper.updateByPrimaryKeySelective(itemDesc);
         //TODO-作业:商品修改缓存
-        String ITEM_KEY = "ITEM_" + item.getId();
-        String ITEM_DESC_KEY = "ITEM_DESC_" + item.getId();
-        redisService.del(ITEM_KEY);
-        redisService.del(ITEM_DESC_KEY);
+        String ITEM_KEY = RedisUtils.ITEM_KEY + item.getId();
+        String ITEM_DESC_KEY = RedisUtils.ITEM_DESC_KEY + item.getId();
+        jedisCluster.del(ITEM_KEY);
+        jedisCluster.del(ITEM_DESC_KEY);
         try {
-            saveToRedis(item, ITEM_KEY);
-            saveToRedis(itemDesc, ITEM_DESC_KEY);
+            RedisUtils.saveToRedis(jedisCluster,item,ITEM_KEY);
+            RedisUtils.saveToRedis(jedisCluster,itemDesc,ITEM_DESC_KEY);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-    }
-
-    private void saveToRedis(Object entity, String KEYNAME) throws JsonProcessingException {
-        String jsonData = MAPPER.writeValueAsString(entity);
-        redisService.set(KEYNAME, jsonData, 60 * 60 * 24 * 10);
     }
 
     public void deleteItems(Long[] ids) {

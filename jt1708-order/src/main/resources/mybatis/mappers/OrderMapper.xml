@@ -8,20 +8,42 @@
         payment_time,consign_time,end_time,close_time,shipping_name,shipping_code,
         user_id,buyer_message,buyer_nick,buyer_rate)
         VALUES
-        (#{orderId},#{payment}#,#{paymentType},#{postFee},#{status},
+        (#{orderId},#{payment},#{paymentType},#{postFee},#{status},
         #{paymentTime},#{consignTime},#{endTime},#{closeTime},#{shippingName},#{shippingCode},
-        #{userId},#{buyerMessage},#{buyerNick},#{buyerRate});
+        #{userId},#{buyerMessage},#{buyerNick},#{buyerRate})
+        ;
         INSERT INTO tb_order_item (item_id,order_id,num,title,price,total_fee,pic_path)
         VALUES
         <foreach collection="orderItems" item="item" separator=",">
-            (#{item.itemId},#{item.orderId},#{item.num},#{item.title},#{item.price},#{item.totalFee},#{item.picPath})
+            (#{item.itemId},#{orderId},#{item.num},#{item.title},#{item.price},#{item.totalFee},
+            #{item.picPath})
         </foreach>
         ;
-        INSERT INTO tb_order_shipping (order_id,receiver_name,receiver_phone,receiver_mobile,receiver_state,receiver_city,receiver_district,receiver_address,receiver_zip,created,updated)
+        INSERT INTO tb_order_shipping (order_id,receiver_name,receiver_phone,
+        receiver_mobile,receiver_state,receiver_city,
+        receiver_district,receiver_address,receiver_zip,
+        created,updated)
         VALUES
-        (#{orderShipping.orderId},#{orderShipping.receiverName},#{orderShipping.receiverPhone},
+        (#{orderId},#{orderShipping.receiverName},#{orderShipping.receiverPhone},
         #{orderShipping.receiverMobile},#{orderShipping.receiverState},#{orderShipping.receiverCity}
         ,#{orderShipping.receiverDistrict},#{orderShipping.receiverAddress},#{orderShipping.receiverZip},
         #{orderShipping.created},#{orderShipping.updated})
     </insert>
+
+    <resultMap id="orderRM" type="Order">
+        <id property="orderId" column="order_id"/>
+        <!-- 查询子表的顺序有要求，先写一对一，再写一对多 -->
+        <association property="orderShipping" javaType="OrderShipping" column="order_id" select="queryOrderShippingByOrderId" autoMapping="true"/>
+        <collection property="orderItems" javaType="ArrayList" ofType="OrderItem" column="order_id" select="queryItemListByOrderId" autoMapping="true"/>
+    </resultMap>
+
+    <select id="queryByOrderId" parameterType="string" resultMap="orderRM">
+        SELECT * FROM tb_order WHERE order_id=#{orderId}
+    </select>
+    <select id="queryItemListByOrderId" parameterType="string" resultType="OrderItem">
+        SELECT * FROM tb_order_item WHERE order_id=#{orderId}
+    </select>
+    <select id="queryOrderShippingByOrderId" parameterType="string" resultType="OrderShipping">
+        SELECT * FROM tb_order_shipping WHERE order_id=#{orderId}
+    </select>
 </mapper>

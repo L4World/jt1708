@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jt.common.service.BaseService;
 import com.jt.common.service.RedisService;
+import com.jt.common.util.RedisUtils;
 import com.jt.sso.mapper.UserMapper;
 import com.jt.sso.pojo.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.JedisCluster;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +22,7 @@ public class UserService extends BaseService<User> {
     private UserMapper userMapper;
     private static final ObjectMapper MAPPER = new ObjectMapper();
     @Autowired
-    private RedisService redisService;
+    private JedisCluster jedisCluster;
 
     public boolean check(String param, Integer type) {
         //构建一个传递给 userMapper的Map对象,就爱那个param传递给他
@@ -69,8 +71,8 @@ public class UserService extends BaseService<User> {
                 try {
                     String userJson = MAPPER.writeValueAsString(user);
                     //生成key , ticket
-                    String ticket = DigestUtils.md5Hex("JT_TICKET" + System.currentTimeMillis() + username);
-                    redisService.set(ticket, userJson);
+                    String ticket = DigestUtils.md5Hex(RedisUtils.JT_TICKET + System.currentTimeMillis() + username);
+                    jedisCluster.set(ticket, userJson);
                     return ticket;
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
@@ -82,7 +84,7 @@ public class UserService extends BaseService<User> {
 
     //查询用户信息
     public String queryByTicket(String ticket) {
-        String userJson = redisService.get(ticket);
+        String userJson = jedisCluster.get(ticket);
         return userJson;
     }
 }

@@ -5,4 +5,6 @@ import com.jt.order.pojo.Order;
 
 public interface OrderMapper extends SysMapper<Order>{
     public void orderCreate(Order order);
+
+    public Order queryByOrderId(String orderId);
 }

@@ -1,4 +1,4 @@
-package com.jt.order.pojo;
+package com.jt.web.pojo;
 
 import com.jt.common.po.BasePojo;
 
